@@ -1,6 +1,6 @@
 spring:
   application:
-    name: pedacinho-do-ceu-api
+    name: gestao-ong-animais-api
   config:
     import: optional:file:.env[.properties]
 
