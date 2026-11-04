@@ -24,7 +24,7 @@ public class TokenService {
             Algorithm algorithm = Algorithm.HMAC256(secret);
 
             return JWT.create()
-                    .withIssuer("gestao-ong-animais-api")
+                    .withIssuer("gestao_ong_animais_api")
                     .withSubject(usuario.getEmail())
                     .withClaim("perfil", usuario.getPerfil())
                     .withExpiresAt(gerarDataExpiracao())
@@ -39,7 +39,7 @@ public class TokenService {
             Algorithm algorithm = Algorithm.HMAC256(secret);
 
             return JWT.require(algorithm)
-                    .withIssuer("gestao-ong-animais-api")
+                    .withIssuer("gestao_ong_animais_api")
                     .build()
                     .verify(token)
                     .getSubject();
