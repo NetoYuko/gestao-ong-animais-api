@@ -16,8 +16,7 @@ public record AnimalRequestDTO(
         @Schema(description = "Idade aproximada em meses", example = "24")
         Integer idadeMeses,
 
-        @Schema(description = "Status atual de adoção", example = "DISPONIVEL")
-        @NotBlank(message = "O status é obrigatório")
+        @Schema(description = "Gerenciado automaticamente pelos processos de adoção")
         String status,
 
         @Schema(description = "URL da foto salva no Supabase Storage", example = "https://...")
