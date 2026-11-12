@@ -26,7 +26,7 @@ public class AnimalService {
         animal.setNome(dto.nome());
         animal.setEspecie(dto.especie());
         animal.setIdadeMeses(dto.idadeMeses());
-        animal.setStatus(dto.status());
+        animal.setStatus("DISPONIVEL");
         animal.setFotoUrl(dto.fotoUrl());
 
         Animal animalSalvo = repository.save(animal);
@@ -47,7 +47,6 @@ public class AnimalService {
         animal.setNome(dto.nome());
         animal.setEspecie(dto.especie());
         animal.setIdadeMeses(dto.idadeMeses());
-        animal.setStatus(dto.status());
         animal.setFotoUrl(dto.fotoUrl());
 
         Animal animalAtualizado = repository.save(animal);
