@@ -49,7 +49,7 @@ class AnimalControllerTest {
     }
 
     @Test
-    @DisplayName("Deve atualizar dados de um animal sem permitir alteração direta de status (Permissão ADMIN)")
+    @DisplayName("Deve atualizar dados de um animal sem permitir alteração direta de status")
     @WithMockUser(roles = {"ADMIN", "USER"})
     void deveAtualizarAnimal() throws Exception {
         AnimalRequestDTO criacaoDto = new AnimalRequestDTO("Rex", "CACHORRO", 5, "DISPONIVEL", null);
