@@ -36,16 +36,16 @@ public class AdocaoService {
         Tutor tutor = tutorRepository.findById(dto.tutorId())
                 .orElseThrow(() -> new RuntimeException("Tutor não encontrado."));
 
+        if (!"DISPONIVEL".equalsIgnoreCase(animal.getStatus())) {
+            throw new RuntimeException("Este animal não está disponível para um novo processo de adoção.");
+        }
+
         Adocao adocao = new Adocao();
         adocao.setAnimal(animal);
         adocao.setTutor(tutor);
         adocao.setStatus(dto.status().toUpperCase());
 
-        if ("APROVADO".equals(adocao.getStatus())) {
-            animal.setStatus("ADOTADO");
-            adocao.setDataConclusao(LocalDate.now());
-            animalRepository.save(animal);
-        }
+        sincronizarStatusAnimal(adocao, animal);
 
         Adocao salvo = adocaoRepository.save(adocao);
         return new AdocaoResponseDTO(salvo);
@@ -72,15 +72,26 @@ public class AdocaoService {
 
         adocao.setStatus(dto.status().toUpperCase());
 
-        if ("APROVADO".equals(adocao.getStatus())) {
-            Animal animal = adocao.getAnimal();
-            animal.setStatus("ADOTADO");
-            adocao.setDataConclusao(LocalDate.now());
-
-            animalRepository.save(animal);
-        }
+        sincronizarStatusAnimal(adocao, adocao.getAnimal());
 
         Adocao adocaoAtualizada = adocaoRepository.save(adocao);
         return new AdocaoResponseDTO(adocaoAtualizada);
+    }
+
+    private void sincronizarStatusAnimal(Adocao adocao, Animal animal) {
+        String statusAdocao = adocao.getStatus();
+
+        if ("APROVADO".equals(statusAdocao)) {
+            animal.setStatus("ADOTADO");
+            adocao.setDataConclusao(LocalDate.now());
+        } else if ("RECUSADO".equals(statusAdocao)) {
+            animal.setStatus("DISPONIVEL");
+            adocao.setDataConclusao(LocalDate.now());
+        } else {
+            animal.setStatus("EM_ADOCAO");
+            adocao.setDataConclusao(null);
+        }
+
+        animalRepository.save(animal);
     }
 }
