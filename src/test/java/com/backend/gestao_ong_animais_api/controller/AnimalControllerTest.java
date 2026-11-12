@@ -29,7 +29,6 @@ class AnimalControllerTest {
     @DisplayName("Deve cadastrar um animal com sucesso")
     @WithMockUser(roles = "ADMIN")
     void deveCadastrarAnimal() throws Exception {
-        // Exemplo com uma URL fictícia para validar a tipagem:
         AnimalRequestDTO dto = new AnimalRequestDTO("Bolinha", "GATO", 12, "DISPONIVEL", "https://fakeurl.com/foto-teste.jpg");
 
         mockMvc.perform(post("/api/animais")
@@ -50,10 +49,10 @@ class AnimalControllerTest {
     }
 
     @Test
-    @DisplayName("Deve atualizar um animal com sucesso")
-    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Deve atualizar dados de um animal sem permitir alteração direta de status")
+    @WithMockUser(roles = {"ADMIN", "USER"})
     void deveAtualizarAnimal() throws Exception {
-        AnimalRequestDTO criacaoDto = new AnimalRequestDTO("Bolinha", "GATO", 5, "DISPONIVEL", null);
+        AnimalRequestDTO criacaoDto = new AnimalRequestDTO("Rex", "CACHORRO", 5, "DISPONIVEL", null);
         String responseJson = mockMvc.perform(post("/api/animais")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(criacaoDto)))
@@ -61,14 +60,15 @@ class AnimalControllerTest {
 
         String idGerado = objectMapper.readTree(responseJson).get("id").asText();
 
-        AnimalRequestDTO atualizacaoDto = new AnimalRequestDTO("Bolinha editado", "GATO", 6, "DISPONIVEL", null);
+        AnimalRequestDTO atualizacaoDto = new AnimalRequestDTO("Rex Editado", "CACHORRO", 6, "ADOTADO", null);
 
         mockMvc.perform(put("/api/animais/" + idGerado)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(atualizacaoDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nome").value("Bolinha editado"))
-                .andExpect(jsonPath("$.idadeMeses").value(6));
+                .andExpect(jsonPath("$.nome").value("Rex Editado"))
+                .andExpect(jsonPath("$.idadeMeses").value(6))
+                .andExpect(jsonPath("$.status").value("DISPONIVEL"));
     }
 
     @Test
